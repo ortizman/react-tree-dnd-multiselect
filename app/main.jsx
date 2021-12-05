@@ -33,32 +33,32 @@ function getTextByIndex(itemIndex, data) {
 const SEPARATOR = '_';
 const treeData = [
   {
-    text: 'Furniture',
+    text: 'Item 1',
     expanded: true,
     items: [
       {
-        text: 'Tables & Chairs',
+        text: 'Item 2',
       },
       {
-        text: 'Sofas',
+        text: 'Item 3',
       },
       {
-        text: 'Occasional Furniture',
+        text: 'Item 4',
       },
     ],
   },
   {
-    text: 'Decor',
+    text: 'Item 5',
     expanded: true,
     items: [
       {
-        text: 'Bed Linen',
+        text: 'Item 6',
       },
       {
-        text: 'Curtains & Blinds',
+        text: 'Item 7',
       },
       {
-        text: 'Carpets',
+        text: 'Item 8',
       },
     ],
   },
