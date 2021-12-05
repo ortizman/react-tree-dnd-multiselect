@@ -168,10 +168,14 @@ const App = () => {
         ids = [];
         const lastIndex = firstItem.length - 1;
 
-        while (firstItem[lastIndex] !== lastItem[lastIndex]) {
+        while (
+          firstItem[lastIndex] !== lastItem[lastIndex] &&
+          ids.length < 100
+        ) {
           ids.push(firstItem.join(SEPARATOR));
           firstItem[lastIndex] = firstItem[lastIndex] + 1;
         }
+        ids.push(lastItem.join(SEPARATOR));
       }
     } else if (!isDragDrop.current && event.nativeEvent.ctrlKey) {
       ids = selected.ids.slice();
@@ -192,7 +196,7 @@ const App = () => {
       ids,
       idField: 'text',
     });
-    setHierarchicalsSelected(hierarchicalsIds);
+    setHierarchicalsSelected(hierarchicalsIds || []);
   };
 
   const onExpandChange = (event) => {
