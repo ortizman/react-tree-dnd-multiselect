@@ -19,6 +19,17 @@ function getSiblings(itemIndex, data) {
   return result;
 }
 
+function getTextByIndex(itemIndex, data) {
+  let result = data;
+  const indices = itemIndex.split(SEPARATOR).map((index) => Number(index));
+
+  for (let i = 0; i < indices.length - 1; i++) {
+    result = result[indices[i]].items || [];
+  }
+
+  return result[indices[indices.length - 1]].text;
+}
+
 const SEPARATOR = '_';
 const treeData = [
   {
@@ -147,11 +158,12 @@ const App = () => {
     let ids;
     let hierarchicalsIds;
     if (!isDragDrop.current && event.nativeEvent.shiftKey) {
-      ids = selected.ids.slice();
-      const index = ids.indexOf(event.item.text);
-      index === -1 ? ids.push(event.item.text) : undefined;
+      ids = [];
+      let hids = hierarchicalsSelected.slice();
+      const index = hids.indexOf(event.itemHierarchicalIndex);
+      index === -1 ? hids.push(event.itemHierarchicalIndex) : undefined;
 
-      const sorted = ids.sort(
+      const sorted = hids.sort(
         (a, b) =>
           Number(a.split(SEPARATOR).join('')) -
           Number(b.split(SEPARATOR).join(''))
@@ -165,18 +177,25 @@ const App = () => {
         JSON.stringify(firstItem.slice(0, -1)) ===
         JSON.stringify(lastItem.slice(0, -1))
       ) {
-        ids = [];
+        hids = [];
         const lastIndex = firstItem.length - 1;
 
         while (
           firstItem[lastIndex] !== lastItem[lastIndex] &&
-          ids.length < 100
+          hids.length < 100
         ) {
-          ids.push(firstItem.join(SEPARATOR));
+          const itemIndex = firstItem.join(SEPARATOR);
+          hids.push(itemIndex);
+          ids.push(getTextByIndex(itemIndex, tree));
           firstItem[lastIndex] = firstItem[lastIndex] + 1;
         }
-        ids.push(lastItem.join(SEPARATOR));
+        const lastItemIndex = lastItem.join(SEPARATOR);
+        hids.push(lastItemIndex);
+        ids.push(getTextByIndex(lastItemIndex, tree));
       }
+      hierarchicalsIds = hids;
+      console.log(hids);
+      console.log(ids);
     } else if (!isDragDrop.current && event.nativeEvent.ctrlKey) {
       ids = selected.ids.slice();
       const index = ids.indexOf(event.item.text);
