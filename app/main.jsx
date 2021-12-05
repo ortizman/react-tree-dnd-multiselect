@@ -146,7 +146,34 @@ const App = () => {
   const onItemClick = (event) => {
     let ids;
     let hierarchicalsIds;
-    if (!isDragDrop.current && event.nativeEvent.ctrlKey) {
+    if (!isDragDrop.current && event.nativeEvent.shiftKey) {
+      ids = selected.ids.slice();
+      const index = ids.indexOf(event.item.text);
+      index === -1 ? ids.push(event.item.text) : undefined;
+
+      const sorted = ids.sort(
+        (a, b) =>
+          Number(a.split(SEPARATOR).join('')) -
+          Number(b.split(SEPARATOR).join(''))
+      );
+
+      const firstItem = sorted[0].split(SEPARATOR).map(Number);
+      const lastItem = sorted[sorted.length - 1].split(SEPARATOR).map(Number);
+
+      // tienen que ser del mismo padre
+      if (
+        JSON.stringify(firstItem.slice(0, -1)) ===
+        JSON.stringify(lastItem.slice(0, -1))
+      ) {
+        ids = [];
+        const lastIndex = firstItem.length - 1;
+
+        while (firstItem[lastIndex] !== lastItem[lastIndex]) {
+          ids.push(firstItem.join(SEPARATOR));
+          firstItem[lastIndex] = firstItem[lastIndex] + 1;
+        }
+      }
+    } else if (!isDragDrop.current && event.nativeEvent.ctrlKey) {
       ids = selected.ids.slice();
       const index = ids.indexOf(event.item.text);
       index === -1 ? ids.push(event.item.text) : ids.splice(index, 1);
